@@ -1,0 +1,46 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: csi-driver-smb
+  namespace: kube-system
+spec:
+  repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
+  chart: csi-driver-smb
+  targetNamespace: kube-system
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hetzner-sb-smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//78.47.149.51/backup"
+  csi.storage.k8s.io/provisioner-secret-name: "hetzner-sb-creds"
+  csi.storage.k8s.io/provisioner-secret-namespace: "default"
+  csi.storage.k8s.io/node-stage-secret-name: "hetzner-sb-creds"
+  csi.storage.k8s.io/node-stage-secret-namespace: "default"
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hetzner-sb-smb-nextcloud
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//78.47.149.51/backup"
+  csi.storage.k8s.io/provisioner-secret-name: "hetzner-sb-creds"
+  csi.storage.k8s.io/provisioner-secret-namespace: "default"
+  csi.storage.k8s.io/node-stage-secret-name: "hetzner-sb-creds"
+  csi.storage.k8s.io/node-stage-secret-namespace: "default"
+mountOptions:
+  - dir_mode=0770
+  - file_mode=0770
+  - uid=33
+  - gid=33
+  - noperm
+  - mfsymlinks
+reclaimPolicy: Retain
+volumeBindingMode: Immediate

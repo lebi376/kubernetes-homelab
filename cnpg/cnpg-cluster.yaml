@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+spec:
+  instances: 2
+  storage:
+    storageClass: local-path
+    size: 5Gi
+  managed:
+    roles:
+      - name: vaultwarden
+        ensure: present
+        login: true
+        passwordSecret:
+          name: vaultwarden-db-creds
+      - name: nextcloud
+        ensure: present
+        login: true
+        passwordSecret:
+          name: nextcloud-db-creds

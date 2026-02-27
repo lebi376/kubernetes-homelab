@@ -1,0 +1,14 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: hetzner-sb-creds
+  namespace: default
+spec:
+  encryptedData:
+    configData: AgBAlqDptxLiCvY3I8w0ZE70w17TTwueDhZca5q+mWQ8jcF8sVXGwx83esUd8DOUdB9NwXJZPaI6fdQ48URuf+KoBUfC/q1KsFTQZW+K2Z12cF+CXSThYnVozYaFkRGNo1h7yr/2YSrWkfrB5vTG0kS0hXIRhvwhQvdMLw7eUO186NMABZdPEfjvpVo6fFpb4ToL48LVwf4uHeTwenF1GSuHBQ2VLXqHhPqgQRNaEXa5CRb6zctr1Cxvjqt0hnntPtJLq9WCCRXLnNWhgNq/EeA1dQtQmmnw2jItrcXlX4Ic4yEGYst2gOnMKCwJrO0D5jSjzGne4rQik73u8XqEBS9MaCMixYne/oN8vu8LsNcrYL9X40JgdGzWmOsGRNW5pL6/3C35fX0XusCUGO2IJ5rmu8+UM4yxGSVReaGB6PhgjQl4klliu7cn4b1aa45TSoq/9IZpHPAulypLqLMO5idfnAoLqNa/5LEo7Pqyrr25BIun82FjMRIttN6GrJQuXcyUAeDyqlh10FyBsI1nmO+5m7m4cEcj/GDH8o+UWQa0vFTe+AHt5zfnCsznwgRwcsR23FwBXSSNFrDeC0xdsz4L8KHdt9/HF2O76MhOyYWCssydB8g3120xi6Meznbc3CTw78YtrVaCPU02cXpj7b4xMEopy22DVOdBKxjMckNrhOMTvEbCnMyFygTdplipdTwkz6/v4Hl77PhCExjx1jOvQ5VQFyUOwoXxMtALKuDQpJl4olvithjpFonNRJdJD9sWU9DjcatXN8/vCFCZJqI3iLA8dvCpYfAeEiKrhH19ZynNU8xJpfRpl4/lYywxA81hBcjUSJvXM7XfxrjK52dz7Sh7bRC2EPVD97u8SfTV4vawvd5Olpw7/WkRpiJELQFq6vUhaGuqYZcnUXKB77ynaPgZrnT+XODslqeMGsFwJDoDXXh8EGhxow==
+  template:
+    metadata:
+      name: hetzner-sb-creds
+      namespace: default
+    type: Opaque

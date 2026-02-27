@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vaultwarden-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: hetzner-sb
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      containers:
+      - name: vaultwarden
+        image: vaultwarden/server:latest
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-db-creds
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-db-creds
+              key: password
+        - name: DATABASE_URL
+          value: "postgresql://$(DB_USER):$(DB_PASS)@postgres-cluster-rw:5432/vaultwardendb"
+        - name: ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-admin-vars
+              key: ADMIN_TOKEN
+        readinessProbe:
+          httpGet:
+            path: /alive
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 2
+          failureThreshold: 3
+      volumes:
+      - name: vw-storage
+        persistentVolumeClaim:
+          claimName: vaultwarden-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vaultwarden-service
+  annotations:
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: "vaultwarden_sticky"
+spec:
+  type: ClusterIP
+  selector:
+    app: vaultwarden
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vaultwarden-ingress
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd, default-security-headers@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - vault.lebi376.me
+    secretName: vaultwarden-tls-secret
+  rules:
+  - host: vault.lebi376.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: vaultwarden-service
+            port:
+              number: 80

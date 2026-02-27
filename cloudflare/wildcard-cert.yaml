@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lebi376-wildcard
+  namespace: default
+spec:
+  secretName: wildcard-tls-secret
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.lebi376.me"
+  dnsNames:
+  - "*.lebi376.me"
+  - "lebi376.me"

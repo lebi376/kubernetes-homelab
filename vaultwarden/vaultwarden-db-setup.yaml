@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: vaultwardendb
+spec:
+  name: vaultwardendb
+  owner: vaultwarden
+  cluster:
+    name: postgres-cluster
