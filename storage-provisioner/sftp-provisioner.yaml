@@ -4,8 +4,7 @@ metadata:
   name: csi-driver-rclone
   namespace: kube-system
 spec:
-  repo: oci://ghcr.io/veloxpack/charts
-  chart: csi-driver-rclone
+  chart: oci://ghcr.io/veloxpack/charts/csi-driver-rclone
   targetNamespace: kube-system
   valuesContent: |-
     node:
