@@ -24,3 +24,26 @@ spec:
   redirectScheme:
     scheme: https
     permanent: true
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rate-limit
+  namespace: default
+spec:
+  rateLimit:
+    average: 100
+    period: 1m
+    burst: 20
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: admin-only
+  namespace: default
+spec:
+  ipAllowList:
+    sourceRange:
+      - 192.168.2.0/24

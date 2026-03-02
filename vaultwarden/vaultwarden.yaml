@@ -80,7 +80,7 @@ metadata:
   name: vaultwarden-ingress
   namespace: default
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd, default-security-headers@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd,default-security-headers@kubernetescrd,default-rate-limit@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
