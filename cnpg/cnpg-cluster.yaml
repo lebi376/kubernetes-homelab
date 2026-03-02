@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: postgres-cluster
 spec:
-  instances: 2
+  instances: 3
   storage:
     storageClass: local-path
     size: 5Gi

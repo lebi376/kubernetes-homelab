@@ -19,8 +19,8 @@ metadata:
   namespace: default
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn-2-replicas
+    - ReadWriteMany
+  storageClassName: longhorn
   resources:
     requests:
       storage: 5Gi
@@ -32,7 +32,7 @@ metadata:
   name: nextcloud
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nextcloud
