@@ -3,6 +3,8 @@ kind: Certificate
 metadata:
   name: lebi376-wildcard
   namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   secretName: wildcard-tls-secret
   issuerRef:
