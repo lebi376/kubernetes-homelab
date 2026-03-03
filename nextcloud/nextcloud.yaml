@@ -42,6 +42,8 @@ spec:
       labels:
         app: nextcloud
     spec:
+      securityContext:
+        fsGroup: 33
       containers:
       - name: nextcloud
         image: nextcloud:apache
@@ -71,14 +73,25 @@ spec:
           value: "postgres-cluster-rw.default.svc.cluster.local"
         - name: NEXTCLOUD_DATA_DIR
           value: "/var/www/html/data"
+        - name: REDIS_HOST
+          value: "redis.default.svc.cluster.local"
+        - name: REDIS_HOST_PORT
+          value: "6379"
+        - name: NEXTCLOUD_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-admin-creds
+              key: username
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-admin-creds
+              key: password
         volumeMounts:
         - name: nextcloud-data
           mountPath: /var/www/html/data
         - name: nextcloud-core
           mountPath: /var/www/html
-        - name: nextcloud-redis-config
-          mountPath: /var/www/html/config/redis.config.php
-          subPath: redis.config.php
       volumes:
       - name: nextcloud-data
         persistentVolumeClaim:
@@ -86,9 +99,6 @@ spec:
       - name: nextcloud-core
         persistentVolumeClaim:
           claimName: nextcloud-core-pvc
-      - name: nextcloud-redis-config
-        configMap:
-          name: nextcloud-redis-config
 
 ---
 apiVersion: v1
