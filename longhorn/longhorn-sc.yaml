@@ -9,6 +9,7 @@ parameters:
   staleReplicaTimeout: "2880"
   fromBackup: ""
   fsType: "ext4"
+reclaimPolicy: Retain
 
 ---
 kind: StorageClass
@@ -22,3 +23,4 @@ parameters:
   staleReplicaTimeout: "5"
   fromBackup: ""
   fsType: "ext4"
+reclaimPolicy: Retain
