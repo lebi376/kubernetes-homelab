@@ -33,9 +33,9 @@ metadata:
   namespace: default
 spec:
   rateLimit:
-    average: 500
+    average: 2000
     period: 1m
-    burst: 100
+    burst: 500
 
 ---
 apiVersion: traefik.io/v1alpha1
