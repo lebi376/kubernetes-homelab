@@ -97,7 +97,7 @@ metadata:
   name: nextcloud-ingress
   namespace: default
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd,default-security-headers@kubernetescrd,default-rate-limit@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd,default-security-headers@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
