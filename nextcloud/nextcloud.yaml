@@ -27,12 +27,13 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: nextcloud
   namespace: default
 spec:
   replicas: 2
+  serviceName: nextcloud-service
   selector:
     matchLabels:
       app: nextcloud
@@ -46,6 +47,13 @@ spec:
         image: nextcloud:apache
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /status.php
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 120 # Allow 30 minutes for nextcloud to initialize
         env:
         - name: POSTGRES_DB
           value: nextclouddb
