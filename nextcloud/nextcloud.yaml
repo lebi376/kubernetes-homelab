@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 800Gi
@@ -19,7 +19,7 @@ metadata:
   namespace: default
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: longhorn-sc
   resources:
     requests:
@@ -32,7 +32,7 @@ metadata:
   name: nextcloud
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nextcloud
@@ -68,6 +68,9 @@ spec:
           mountPath: /var/www/html/data
         - name: nextcloud-core
           mountPath: /var/www/html
+        - name: nextcloud-redis-config
+          mountPath: /var/www/html/config/redis.config.php
+          subPath: redis.config.php
       volumes:
       - name: nextcloud-data
         persistentVolumeClaim:
@@ -75,6 +78,9 @@ spec:
       - name: nextcloud-core
         persistentVolumeClaim:
           claimName: nextcloud-core-pvc
+      - name: nextcloud-redis-config
+        configMap:
+          name: nextcloud-redis-config
 
 ---
 apiVersion: v1
