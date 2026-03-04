@@ -24,3 +24,35 @@ parameters:
   fromBackup: ""
   fsType: "ext4"
 reclaimPolicy: Retain
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: longhorn-2-replicas-v2
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "1"
+  fromBackup: ""
+  fsType: "ext4"
+  dataLocality: "best-effort"
+  replicaAutoBalance: "best-effort"
+reclaimPolicy: Retain
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: longhorn-sc-v2
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "3"
+  staleReplicaTimeout: "1"
+  fromBackup: ""
+  fsType: "ext4"
+  dataLocality: "best-effort"
+  replicaAutoBalance: "best-effort"
+reclaimPolicy: Retain

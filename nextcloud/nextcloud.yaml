@@ -1,7 +1,32 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-nfs-data-pv
+spec:
+  capacity:
+    storage: 800Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nolock
+    - nfsvers=3
+    - port=2049
+    - mountport=2049
+    - soft
+    - timeo=30
+  nfs:
+    server: 10.43.200.1
+    path: /
+  claimRef:
+    name: nextcloud-nfs-data-pvc
+    namespace: default
+
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nextcloud-data-pvc
+  name: nextcloud-nfs-data-pvc
   namespace: default
 spec:
   accessModes:
@@ -9,7 +34,8 @@ spec:
   resources:
     requests:
       storage: 800Gi
-  storageClassName: hetzner-sb-nextcloud
+  volumeName: nextcloud-nfs-data-pv
+  storageClassName: ""
 
 ---
 apiVersion: v1
@@ -20,7 +46,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: longhorn-sc
+  storageClassName: longhorn-sc-v2
   resources:
     requests:
       storage: 5Gi
@@ -95,7 +121,7 @@ spec:
       volumes:
       - name: nextcloud-data
         persistentVolumeClaim:
-          claimName: nextcloud-data-pvc
+          claimName: nextcloud-nfs-data-pvc
       - name: nextcloud-core
         persistentVolumeClaim:
           claimName: nextcloud-core-pvc

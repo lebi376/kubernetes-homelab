@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rclone-nfs
+  namespace: default
+  labels:
+    app: rclone-nfs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: rclone-nfs
+  template:
+    metadata:
+      labels:
+        app: rclone-nfs
+    spec:
+      containers:
+      - name: rclone-nfs
+        image: rclone/rclone:latest
+        args:
+          - serve
+          - nfs
+          - "hetzner:backup/nextcloud-data"
+          - --addr=0.0.0.0:2049
+          - --vfs-cache-mode=full
+          - --cache-dir=/cache
+          - --vfs-cache-max-size=40G
+          - --vfs-cache-max-age=24h
+          - --vfs-write-back=5s
+          - --dir-perms=0770
+          - --file-perms=0770
+          - --uid=33
+          - --gid=33
+          - --log-level=INFO
+        ports:
+        - name: nfs
+          containerPort: 2049
+          protocol: TCP
+        env:
+        - name: RCLONE_CONFIG
+          value: /config/rclone.conf
+        volumeMounts:
+        - name: rclone-config
+          mountPath: /config
+          readOnly: true
+        - name: cache
+          mountPath: /cache
+      volumes:
+      - name: rclone-config
+        secret:
+          secretName: hetzner-sb-creds
+          items:
+          - key: configData
+            path: rclone.conf
+      - name: cache
+        persistentVolumeClaim:
+          claimName: rclone-nfs-cache-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rclone-nfs
+  namespace: default
+spec:
+  clusterIP: 10.43.200.1
+  selector:
+    app: rclone-nfs
+  ports:
+  - name: nfs
+    port: 2049
+    targetPort: 2049
+    protocol: TCP
