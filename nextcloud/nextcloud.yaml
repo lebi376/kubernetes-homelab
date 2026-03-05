@@ -16,7 +16,7 @@ spec:
     - soft
     - timeo=30
   nfs:
-    server: 10.43.200.1
+    server: 192.168.2.101
     path: /
   claimRef:
     name: nextcloud-nfs-data-pvc

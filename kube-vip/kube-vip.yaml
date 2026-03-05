@@ -84,6 +84,8 @@ spec:
               value: first
             - name: cp_enable
               value: "true"
+            - name: svc_enable
+              value: "true"
             - name: cp_namespace
               value: kube-system
             - name: vip_leaderelection
