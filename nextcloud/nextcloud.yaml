@@ -14,8 +14,8 @@ spec:
     - tcp
     - port=2049
     - mountport=2049
-    - soft
-    - timeo=30
+    - hard
+    - actimeo=0
   nfs:
     server: 192.168.2.101
     path: /
@@ -76,7 +76,7 @@ data:
   cache.config.php: |
     <?php
     $CONFIG = array(
-      'cache_path' => '/var/www/html/cache',
+      'cache_path' => '/var/cache/nextcloud',
     );
 
 ---
@@ -155,7 +155,7 @@ spec:
         - name: nextcloud-data
           mountPath: /var/www/html/data
         - name: nextcloud-cache
-          mountPath: /var/www/html/cache
+          mountPath: /var/cache/nextcloud
         - name: nextcloud-extra-config
           mountPath: /var/www/html/config/cache.config.php
           subPath: cache.config.php
