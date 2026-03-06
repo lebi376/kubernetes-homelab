@@ -29,12 +29,21 @@ spec:
           - --cache-dir=/cache
           - --vfs-cache-max-size=40G
           - --vfs-cache-max-age=24h
-          - --vfs-write-back=5s
+          - --vfs-write-back=30s
+          - --transfers=8
+          - --checkers=4
+          - --buffer-size=0
           - --dir-perms=0770
           - --file-perms=0770
           - --uid=33
           - --gid=33
           - --log-level=INFO
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 250m
+          limits:
+            memory: 2Gi
         ports:
         - name: nfs
           containerPort: 2049
