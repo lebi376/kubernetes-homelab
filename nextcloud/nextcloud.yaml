@@ -53,6 +53,33 @@ spec:
       storage: 5Gi
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-cache-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-sc-v2
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-extra-config
+  namespace: default
+data:
+  cache.config.php: |
+    <?php
+    $CONFIG = array(
+      'cache_path' => '/var/www/html/cache',
+    );
+
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -83,7 +110,6 @@ spec:
             httpHeaders:
             - name: Host
               value: nextcloud.lebi376.me
-          initialDelaySeconds: 30
           periodSeconds: 15
           failureThreshold: 120 # Allow 30 minutes for nextcloud to initialize
         env:
@@ -124,17 +150,28 @@ spec:
               name: nextcloud-admin-creds
               key: password
         volumeMounts:
-        - name: nextcloud-data
-          mountPath: /var/www/html/data
         - name: nextcloud-core
           mountPath: /var/www/html
+        - name: nextcloud-data
+          mountPath: /var/www/html/data
+        - name: nextcloud-cache
+          mountPath: /var/www/html/cache
+        - name: nextcloud-extra-config
+          mountPath: /var/www/html/config/cache.config.php
+          subPath: cache.config.php
       volumes:
-      - name: nextcloud-data
-        persistentVolumeClaim:
-          claimName: nextcloud-nfs-data-pvc
       - name: nextcloud-core
         persistentVolumeClaim:
           claimName: nextcloud-core-pvc
+      - name: nextcloud-data
+        persistentVolumeClaim:
+          claimName: nextcloud-nfs-data-pvc
+      - name: nextcloud-cache
+        persistentVolumeClaim:
+          claimName: nextcloud-cache-pvc
+      - name: nextcloud-extra-config
+        configMap:
+          name: nextcloud-extra-config
 
 ---
 apiVersion: v1
