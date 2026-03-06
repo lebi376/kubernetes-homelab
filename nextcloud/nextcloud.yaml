@@ -80,6 +80,9 @@ spec:
           httpGet:
             path: /status.php
             port: 80
+            httpHeaders:
+            - name: Host
+              value: nextcloud.lebi376.me
           initialDelaySeconds: 30
           periodSeconds: 15
           failureThreshold: 120 # Allow 30 minutes for nextcloud to initialize
@@ -104,6 +107,12 @@ spec:
           value: "redis.default.svc.cluster.local"
         - name: REDIS_HOST_PORT
           value: "6379"
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          value: "nextcloud.lebi376.me"
+        - name: NEXTCLOUD_TRUSTED_PROXIES
+          value: "10.42.0.0/16"
+        - name: OVERWRITEPROTOCOL
+          value: "https"
         - name: NEXTCLOUD_ADMIN_USER
           valueFrom:
             secretKeyRef:
