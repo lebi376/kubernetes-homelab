@@ -73,11 +73,15 @@ metadata:
   name: nextcloud-extra-config
   namespace: default
 data:
-  cache.config.php: |
+  cache-config.sh: |
+    #!/bin/sh
+    cat > /var/www/html/config/cache.config.php <<'PHPEOF'
     <?php
     $CONFIG = array(
       'cache_path' => '/var/cache/nextcloud',
     );
+    PHPEOF
+    chown www-data:www-data /var/www/html/config/cache.config.php
 
 ---
 apiVersion: apps/v1
@@ -157,8 +161,7 @@ spec:
         - name: nextcloud-cache
           mountPath: /var/cache/nextcloud
         - name: nextcloud-extra-config
-          mountPath: /var/www/html/config/cache.config.php
-          subPath: cache.config.php
+          mountPath: /docker-entrypoint-hooks.d/before-starting
       volumes:
       - name: nextcloud-core
         persistentVolumeClaim:
@@ -172,6 +175,7 @@ spec:
       - name: nextcloud-extra-config
         configMap:
           name: nextcloud-extra-config
+          defaultMode: 0755
 
 ---
 apiVersion: v1
